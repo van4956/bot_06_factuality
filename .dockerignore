@@ -1,0 +1,74 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Environments and configs
+.env
+.venv
+env/
+venv/
+ENV/
+.env.example
+*.env.*
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+.docker/
+
+# Database data directories
+database/postgres/
+database/influxdb/
+database/grafana/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs and temp
+logs/
+*.log
+*.bak
+*.swp
+*.tmp
+.mypy_cache/
+.pytest_cache/
+.coverage
+.tox/
+.nox/
+
+# Documentation
+*.md
+LICENSE
+prescription.txt
+bot_04_copilot_v2_contents.txt
+
+# Testing
+testing/
+tests/

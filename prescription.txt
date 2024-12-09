@@ -1,0 +1,131 @@
+1) создать папку с проектом (новым ботом)
+
+2) проверить наличие папки .vscode - допнастройки как проводить импорты, настройки шрифтов, хлебные крошки и тд.
+
+3) проверить наличие файла .pylintrc - файл настроек для пайлинтера (подсказки при написании кода, pip8, в списоке не нужные напоминалки/ошибки)
+
+4) создать папку venv с виртуальным окружением через терминал
+
+python -m venv venv
+python3.11 -m venv venv
+
+5) запустить виртуальное окружение
+
+source venv/Scripts/activate         - для GitBash (рекумендуется)
+venv\Scripts\activate                - для Windows
+deactivate                           - выйти из вируального окружения
+
+6) проверить актуальные версии
+
+python --version
+pip --version
+git --version
+docker --version
+
+7) скачать и установить расширения requirements
+
+pip install -r requirements.txt
+
+pip freeze > requirements.txt         - создать файл requirements.txt из зависимостей в env
+pipreqs . --force                     - создать файл requirements.txt из используемых зависимостей проекта
+
+pip uninstall <github>                - удалить определенную зависимость из env
+
+8) если будут проблемы с Redis
+
+установка сервера
+https://stepik.org/lesson/870034/step/3?unit=874212
+
+если будут проблемы, тогда нужно обновить и переустановить пакеты
+sudo apt update && sudo apt dist-upgrade && sudo apt install redis
+
+если не поможет - проверить VPN
+если и это не поможет - в файле main отключить Redis, поменять на MemoryStorage
+
+вообще на локальной машине не должно быть Redis, запускаем только через docker !!!
+
+
+
+9) интернализация gettext
+
+запускаем процесс сбора всех текстов из нашего проекта и создаем соответствующий файл-шаблон .pot для дальнейшей локализации
+pybabel extract -o locales/messages.pot -k _:1,1t -k _:1,2 --copyright-holder="AdvancedBotTemplate" --project="bot_00_template" --version=0.1 --msgid-bugs-address=gontscharowiwan@yandex.ru --input-dirs=.
+
+создаем для gettext директории и файлы .po для нужных локалей
+pybabel init -i locales/messages.pot -d locales -D bot_00_template -l en
+pybabel init -i locales/messages.pot -d locales -D bot_00_template -l ru
+pybabel init -i locales/messages.pot -d locales -D bot_00_template -l de
+pybabel init -i locales/messages.pot -d locales -D bot_00_template -l ja
+
+добавляем переводы в соответствующие файлы, прописываем контакты редакторов (человеков)
+
+компилируем файлы переводов в бинарные файлы с расширением .mo чтобы наш бот научился разговаривать на разных языка
+pybabel compile -d locales -D bot_00_template
+
+
+при обновлении кода, повторяем команду extract, обновляем файл .pot, в версию добавляем минорный релиз 0.1.1
+pybabel extract -o locales/messages.pot -k _:1,1t -k _:1,2 --copyright-holder="AdvancedBotTemplate" --project="bot_00_template" --version=0.2.4 --msgid-bugs-address=gontscharowiwan@yandex.ru --input-dirs=.
+
+далее повторная генерация файлов с переводами для нужных локалей
+pybabel update -i locales/messages.pot -d locales -D bot_00_template -l en
+pybabel update -i locales/messages.pot -d locales -D bot_00_template -l ru
+pybabel update -i locales/messages.pot -d locales -D bot_00_template -l de
+pybabel update -i locales/messages.pot -d locales -D bot_00_template -l ja
+
+добавляем новые переводы для новых строк в файлы .po, там где метка <#, fuzzy> поправляем перевод, и убираем метку <#, fuzzy>
+
+теперь снова компилируем файлы в бинарный вид с помощью команды в терминале
+pybabel compile -d locales -D bot_00_template
+
+
+
+10) Docker
+
+docker --version
+docker-compose --version
+
+docker-compose up -d                  - развернуть все контейнеры, указанные в docker-compose.yml
+docker-compose up --build -d          - пересобрать и развернуть контейнеры, учитывая изменения
+docker-compose down                   - остановить все контейнеры
+
+docker-compose down && docker image prune -f && docker system prune && docker system df
+docker-compose up --build -d && docker logs -f container_bot
+
+docker ps                             - список всех запущенных контейнеров (проверка)
+docker ps -s                          - информация о занимаемом месте запущенных контейнеров
+docker logs <имя контейнера>          - посмотреть логи контейнера
+docker logs -f <имя контейнера>       - посмотреть логи контейнера в реальном времени
+docker logs -f container_bot
+
+docker stop $(docker ps -a -q)        - остановить все контейнеры
+docker rm $(docker ps -a -q)          - удаление остановленных контейнеров, если больше не нужны
+
+docker images                         - список всех образов
+docker-compose build                  - пересобрать образы (после внесения изменений в коде)
+docker rmi <image_id>                 - удаление ненужных образов
+
+docker volume ls                      - все доступные volumes, включая их имена и драйверы
+docker volume rm <volume_name>        - удаление конкретного volume
+docker volume prune                   - удаление всех неиспользуемых volumes (volumes, не связанные с контейнерами)
+docker volume inspect <volume_name>   - подробная информация о конкретном volume
+
+
+docker system df                      - общая информация о пространстве, занимаемом образами, контейнерами, volume'ами и кешем
+docker system prune                   - очистить неиспользуемые данные, кэши, образы и тома
+
+
+
+11) Git
+
+git init
+
+git pull
+
+git add .
+git commit -m "text commit"
+
+git push                         — отправляет локальные коммиты в удаленный репозиторий
+git rebase                       — синхронизировать локальную ветку с удаленной, используйте git rebase для изменения локальных коммитов
+git fetch                        — обновления информации о состоянии удаленного репозитория
+
+rm -rf .git                      — отключить систему контроля версий Git
