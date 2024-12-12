@@ -81,7 +81,7 @@ async def get_admins_info(message: Message, bot: Bot):
     await message.answer(f"Админы:\n\n{list_admins}")
 
 # секретный хендлер, покажет содержимое data пользователя
-@admin_router.message(Command("data"))
+@admin_router.message(F.text == "..")
 async def data_cmd(message: Message, state: FSMContext):
     data = await state.get_data()
     await message.answer(str(data))

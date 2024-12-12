@@ -32,7 +32,7 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 
 from config_data.config import Config, load_config
 
-from handlers import other, admin, group, start, owner, donate, inline
+from handlers import other, admin, group, start, owner, donate, inline, factuality
 from common.comands import private
 from database.models import Base
 from middlewares import counter, db, locale, throttle
@@ -132,7 +132,7 @@ dp.include_router(other.other_router)
 dp.include_router(donate.donate_router)
 dp.include_router(group.group_router)
 dp.include_router(inline.inline_router)
-
+dp.include_router(factuality.factuality_router)
 
 
 # Типы апдейтов которые будем отлавливать ботом
@@ -156,7 +156,7 @@ async def main() -> None:
 
     # Удаление предыдущей версии базы, и создание новых таблиц заново
     async with engine.begin() as connection:
-        # await connection.run_sync(Base.metadata.drop_all)
+        await connection.run_sync(Base.metadata.drop_all)
         await connection.run_sync(Base.metadata.create_all)
 
     # Регистрируем функцию, которая будет вызвана автоматически при запуске/остановке бота

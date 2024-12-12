@@ -14,6 +14,9 @@ venv.bak/
 
 .mypy_cache/
 
+# Исключаем текстовые файлы
+Faktologichnost_Desyat_Pr.txt
+prescription.txt
 
 # Исключаем все файлы в папках баз данных, но оставляем сами папки
 /database/influxdb/*

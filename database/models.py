@@ -31,7 +31,7 @@ class Answers(Base):
     __tablename__ = "answers"
 
     user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.user_id", ondelete="CASCADE"), primary_key=True, autoincrement=True)
-    current_answer: Mapped[int] = mapped_column(Integer, nullable=False)
+    current_question: Mapped[int] = mapped_column(Integer, nullable=False)
     answer_1: Mapped[int] = mapped_column(Integer, nullable=True)
     answer_1_time: Mapped[Float] = mapped_column(Float, nullable=True)
     answer_2: Mapped[int] = mapped_column(Integer, nullable=True)
