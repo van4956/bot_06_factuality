@@ -59,4 +59,4 @@ class Answers(Base):
     answer_13: Mapped[int] = mapped_column(Integer, nullable=True)
     answer_13_time: Mapped[Float] = mapped_column(Float, nullable=True)
     result: Mapped[int] = mapped_column(Integer, CheckConstraint('result >= 0 AND result <= 13'),nullable=True)
-    total_time: Mapped[Float] = mapped_column(Float, nullable=True)
+    answer_total_time: Mapped[Float] = mapped_column(Float, nullable=True)

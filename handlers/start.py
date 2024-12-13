@@ -48,7 +48,7 @@ async def start_cmd(message: Message, session: AsyncSession, bot: Bot, workflow_
         if user_id not in list_users:
             await bot.send_message(chat_id=chat_id, text=f"✅ @{user_name} - подписался на бота")
             new_message = await message.answer(text=_('{user_name}, добро пожаловать в Factuality Test!\n\n'
-                                        'Этот бот основан на книге Ганса Рослинга «Фактологичность». '
+                                        'Этот бот основан на книге Ханса Рослинга «Фактологичность». '
                                         'Пройдите тест из 13 вопросов, чтобы узнать, насколько точно вы воспринимаете мировые тенденции.\n\n'
                                         'Готовы пройти тест?').format(user_name=user_name),
                                 reply_markup=keyboard.inline_start_test())
@@ -88,7 +88,7 @@ async def start_cmd(message: Message, session: AsyncSession, bot: Bot, workflow_
                 new_message = await message.answer(text=_('Factuality Test.\nТест по книге Ганса Рослинга «Фактологичность»\n\n'
                                             'Готовы пройти тест?'),
                                      reply_markup=keyboard.inline_start_test())
-            elif current_question == 14:
+            elif current_question > 13:
                 new_message = await message.answer(text=_('Factuality Test.\nТест по книге Ганса Рослинга «Фактологичность»\n\n'
                                             'Вы уже прошли тест!\n'
                                             'Описываем какой то результат'),

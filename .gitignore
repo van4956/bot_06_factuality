@@ -16,6 +16,8 @@ venv.bak/
 
 # Исключаем текстовые файлы
 Faktologichnost_Desyat_Pr.txt
+Rosling_U._Faktologichnost_Desyat_Pr.a4.pdf
+Rosling_U._Faktologichnost_Desyat_Pr.txt
 prescription.txt
 
 # Исключаем все файлы в папках баз данных, но оставляем сами папки

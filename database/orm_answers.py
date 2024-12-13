@@ -35,3 +35,16 @@ async def orm_update_current_question(session: AsyncSession, user_id: int, quest
     query = update(Answers).where(Answers.user_id == user_id).values(current_question=question_int)
     await session.execute(query)
     await session.commit()
+
+# получаем количество правильных ответов юзера
+async def orm_get_result(session: AsyncSession, user_id: int) -> int:
+    query = select(Answers.result).where(Answers.user_id == user_id)
+    result = await session.execute(query)
+    return result.scalar()
+
+# получаем все result юзеров
+async def orm_get_all_results(session: AsyncSession) -> list[int]:
+    query = select(Answers.result)
+    result = await session.execute(query)
+    return result.scalars().all()
+

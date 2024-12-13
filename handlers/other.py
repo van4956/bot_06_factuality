@@ -60,7 +60,7 @@ async def language_cmd(message: Message, state: FSMContext, workflow_data: dict)
     new_message = await message.answer(
         text=_('Настройки языка\n'
                'Текущий язык: Русский 🇷🇺 \n\n'
-               'Желаете сменить язык, на котором будет работать бот?\n'),
+               'Выберите язык, на котором будет работать бот'),
         reply_markup=keyboard_language()
     )
 
@@ -128,6 +128,14 @@ async def information_cmd(message: Message, workflow_data: dict, state: FSMConte
     # Получаем сохраненный message_id из FSM
     data = await state.get_data()
     last_message_id = data.get('last_message_id')
+    current_question = data.get('current_question', 0)
+
+    if current_question <= 13:
+        reply_markup = keyboard.get_callback_btns(btns={'↩️ Назад': 'back_to_main'}, sizes=(1,1))
+    else:
+        reply_markup = keyboard.get_callback_btns(btns={'Поддержать проект':'donate',
+                                                                                        '↩️ Назад': 'back_to_main'},
+                                                                                    sizes=(1,1))
 
     # Удаляем команду пользователя
     await message.delete()
@@ -135,10 +143,7 @@ async def information_cmd(message: Message, workflow_data: dict, state: FSMConte
     # Если есть предыдущее сообщение, удаляем его
     if last_message_id:
         try:
-            await message.bot.delete_message(
-                chat_id=message.chat.id,
-                message_id=last_message_id
-            )
+            await message.bot.delete_message(chat_id=message.chat.id, message_id=last_message_id)
         except Exception as e:
             logger.error("Ошибка при удалении сообщения: %s", e)
 
@@ -151,13 +156,11 @@ async def information_cmd(message: Message, workflow_data: dict, state: FSMConte
                 '• Проводит тест из 13 вопросов о глобальных тенденциях\n'
                 '• Сравнивает ваши результаты с тысячами других участников\n'
                 '• Помогает увидеть распространённые заблуждения о современном мире\n\n'
-                '📊 Интересный факт: В среднем люди отвечают правильно примерно на 2-3 вопроса из 13. '
-                'Сможете ли вы сделать лучше?\n\n'
+                '📊 Интересный факт: В среднем люди отвечают правильно примерно на 2-3 вопроса из 13.\n\n'
                 '🤔 Почему это важно?\n'
                 'Понимание реального состояния мира помогает принимать более взвешенные решения '
                 'и избегать распространённых когнитивных искажений.'),
-        reply_markup=keyboard.get_callback_btns(btns={'↩️ Назад': 'back_to_main'},
-                                                sizes=(1,1)),)
+        reply_markup=reply_markup)
 
     # Сохраняем message_id текущего сообщения
     await state.update_data(last_message_id=new_message.message_id)
@@ -208,7 +211,7 @@ async def terms_cmd(message: Message, workflow_data: dict, state: FSMContext):
                                                 sizes=(1,1)))
 
     # Сохраняем message_id текущего сообщения
-    await state.update_data(last_interface_message_id=new_message.message_id)
+    await state.update_data(last_message_id=new_message.message_id)
 
     user_id = message.from_user.id
     analytics = workflow_data['analytics']
