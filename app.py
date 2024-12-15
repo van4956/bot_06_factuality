@@ -32,7 +32,7 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 
 from config_data.config import Config, load_config
 
-from handlers import other, admin, group, start, owner, donate, inline, factuality, correct_answer
+from handlers import other, admin, group, start, donate, inline, factuality, correct_answer
 from common.comands import private
 from database.models import Base
 from middlewares import counter, db, locale, throttle
@@ -118,7 +118,7 @@ dp.update.outer_middleware(throttle.ThrottleMiddleware())  # тротлинг ч
 dp.update.outer_middleware(counter.CounterMiddleware())  # простой счетчик
 dp.update.outer_middleware(db.DataBaseSession(session_pool=session_maker))  # мидлварь для прокидывания сессии БД
 dp.update.outer_middleware(locale.LocaleFromDBMiddleware(workflow_data=dp.workflow_data))  # определяем локаль из БД и передам ее в FSMContext
-i18n = I18n(path="locales", default_locale="ru", domain="bot_00_template")  # создаем объект I18n
+i18n = I18n(path="locales", default_locale="ru", domain="bot_06_factuality")  # создаем объект I18n
 dp.update.middleware(FSMI18nMiddleware(i18n=i18n))  # получяем язык на каждый апдейт, через обращение к FSMContext
 
 # dp.update.middleware(ConstI18nMiddleware(locale='ru', i18n=i18n))  # задаем локаль как принудительно устанавливаемую константу
@@ -126,7 +126,6 @@ dp.update.middleware(FSMI18nMiddleware(i18n=i18n))  # получяем язык 
 
 # Подключаем роутеры
 dp.include_router(start.start_router)
-dp.include_router(owner.owner_router)
 dp.include_router(admin.admin_router)
 dp.include_router(other.other_router)
 dp.include_router(donate.donate_router)

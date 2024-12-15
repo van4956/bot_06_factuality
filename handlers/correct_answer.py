@@ -8,19 +8,15 @@ logger.info("Загружен модуль: %s", __name__)
 from icecream import ic
 ic.configureOutput(includeContext=True, prefix=' >>> Debag >>> ')
 
-from aiogram import Router, F, Bot
+from aiogram import Router, F
 from sqlalchemy.ext.asyncio import AsyncSession
-from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import Message, CallbackQuery
 from aiogram.utils.i18n import gettext as _
 from aiogram.utils.i18n import lazy_gettext as __
 
-from database.orm_answers import orm_get_answer
 from common import keyboard
-
-from database.models import Answers
 
 # Инициализируем роутер уровня модуля
 correct_answer_router = Router()
