@@ -222,6 +222,16 @@ async def on_successfull_payment(message: Message, state: FSMContext, workflow_d
     print('donate_info: ', donate_info)
     await state.update_data(donate_info=donate_info)
 
+    # Получаем сохраненный message_id из FSM
+    last_message_id = data.get('last_message_id')
+
+    # Если есть предыдущее сообщение, удаляем его
+    if last_message_id:
+        try:
+            await message.bot.delete_message(chat_id=user_id, message_id=last_message_id)
+        except Exception as e:
+            logger.error("Ошибка при удалении сообщения: %s", e)
+
     new_message = await message.answer(
         text=_("<b>Спасибо!</b>\n"
                "Ваш донат успешно принят.\n\n"
@@ -244,7 +254,7 @@ async def on_successfull_payment(message: Message, state: FSMContext, workflow_d
 
     analytics = workflow_data['analytics']
     await analytics(user_id=user_id,
-                    category_name="/donate",
+                    category_name="/options",
                     command_name="/donate")
 
 # Отправляем сообщение с инструкциями по поддержке покупок

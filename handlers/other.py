@@ -27,12 +27,12 @@ other_router = Router()
 def keyboard_language():
     button_1 = InlineKeyboardButton(text=_('🇬🇧 Английский'), callback_data='locale_en')
     button_2 = InlineKeyboardButton(text=_('🇷🇺 Русский'), callback_data='locale_ru')
-    button_3 = InlineKeyboardButton(text=_('🇩🇪 Немецкий'), callback_data='locale_de')
-    button_4 = InlineKeyboardButton(text=_('🇫🇷 Французский'), callback_data='locale_fr')
+    # button_3 = InlineKeyboardButton(text=_('🇩🇪 Немецкий'), callback_data='locale_de')
+    # button_4 = InlineKeyboardButton(text=_('🇫🇷 Французский'), callback_data='locale_fr')
     button_6 = InlineKeyboardButton(text=_('↩️ Назад'), callback_data='back_to_main')
 
     return InlineKeyboardMarkup(inline_keyboard=[[button_1, button_2],
-                                                 [button_3, button_4],
+                                                #  [button_3, button_4],
                                                  [button_6]])
 
 
@@ -154,9 +154,9 @@ async def information_cmd(message: Message, workflow_data: dict, state: FSMConte
                 'профессора международного здравоохранения и известного спикера TED.\n\n'
                 '🎯 Что делает бот:\n'
                 '• Проводит тест из 13 вопросов о глобальных тенденциях\n'
-                '• Сравнивает ваши результаты с тысячами других участников\n'
                 '• Помогает увидеть распространённые заблуждения о современном мире\n\n'
-                '📊 Интересный факт: В среднем люди отвечают правильно примерно на 2-3 вопроса из 13.\n\n'
+                '📊 Интересный факт: \n'
+                'В среднем люди отвечают правильно примерно на 2-3 вопроса из 13.\n\n'
                 '🤔 Почему это важно?\n'
                 'Понимание реального состояния мира помогает принимать более взвешенные решения '
                 'и избегать распространённых когнитивных искажений.'),
@@ -168,7 +168,7 @@ async def information_cmd(message: Message, workflow_data: dict, state: FSMConte
     user_id = message.from_user.id
     analytics = workflow_data['analytics']
     await analytics(user_id=user_id,
-                    category_name="/options",
+                    category_name="/info",
                     command_name="/information")
 
 
@@ -205,8 +205,7 @@ async def terms_cmd(message: Message, workflow_data: dict, state: FSMContext):
                                 '• Используем информацию только для улучшения работы бота\n\n'
                                 '❌ Отказ от использования:\n'
                                 '• Чтобы остановить бота, заблокируйте его стандартными средствами Telegram\n'
-                                '• При этом ваши данные будут удалены из статистики ответов\n\n'
-                                'По всем вопросам: @van4956'),
+                                '• При этом ваши данные будут удалены из статистики ответов\n\n'),
                                 reply_markup=keyboard.get_callback_btns(btns={'↩️ Назад': 'back_to_main'},
                                                 sizes=(1,1)))
 
@@ -216,5 +215,10 @@ async def terms_cmd(message: Message, workflow_data: dict, state: FSMContext):
     user_id = message.from_user.id
     analytics = workflow_data['analytics']
     await analytics(user_id=user_id,
-                    category_name="/options",
+                    category_name="/info",
                     command_name="/terms")
+
+# хендлер на получение сообщения от пользователя, и удаление его
+@other_router.message()
+async def echo(message: Message):
+    await message.delete()

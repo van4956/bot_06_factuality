@@ -64,10 +64,10 @@ questions_answers = {
         {'question7_1': '1) Увеличилось более чем в два раза',
          'question7_2': '2) Осталось почти неизменным',
          'question7_3': '3) Уменьшилось более чем в два раза'}),
-    8: ("Вопрос 8:\n\nСегодня население земного шара составляет около 7 миллиардов человек. Какая карта лучше всего показывает их распределение?\n\n<i>(Карта которая в описании бота ⬆️. Каждая фигурка обозначает 1 миллиард человек)</i>",
-        {'question8_1': '1) Карта А',
-         'question8_2': '2) Карта Б',
-         'question8_3': '3) Карта В'}),
+    8: ("Вопрос 8:\n\nСегодня население земного шара составляет около 7 миллиардов человек. Какая карта лучше всего показывает их распределение?\n\n<i>(Карта которая в описании бота ⬆️.\nКаждая фигурка обозначает 1 миллиард человек)</i>",
+        {'question8_1': '1) Карта I',
+         'question8_2': '2) Карта II',
+         'question8_3': '3) Карта III'}),
     9: ("Вопрос 9:\n\nСколько годовалых детей в мире прививается сегодня от каких-либо болезней?",
         {'question9_1': '1) 20 процентов',
          'question9_2': '2) 50 процентов',
@@ -99,7 +99,7 @@ correct_answers = {
     5: 3,  # 2 миллиарда
     6: 2,  # Будет больше взрослых
     7: 3,  # Уменьшилось более чем в два раза
-    8: 1,  # Карта А
+    8: 1,  # Карта I
     9: 3,  # 80 процентов
     10: 1, # 9 лет
     11: 3, # Ни одного
@@ -126,6 +126,7 @@ async def check_answers(answers_dict: dict) -> int:
 
 # Функция расчета общего времени ответов на все вопросы
 async def calc_answer_time(answers_dict: dict) -> float:
+    """Функция расчета общего времени ответов на все вопросы. Принимает словарь с ответами юзера и возвращает общее время ответов."""
     answer_total_time = 0
     for question_num in range(1, 14):
         answer_time_data = answers_dict.get(f'answer_{question_num}_time')
@@ -141,7 +142,7 @@ async def factuality_command(callback_query: CallbackQuery, state: FSMContext, s
 
     # Получаем сохраненный message_id и current_question из FSM
     data = await state.get_data()
-    last_message_id = data.get('last_message_id')
+    # last_message_id = data.get('last_message_id')
     orm_current_question = await orm_get_current_question(session, user_id)
     current_question = data.get('current_question', orm_current_question)
 
@@ -153,21 +154,17 @@ async def factuality_command(callback_query: CallbackQuery, state: FSMContext, s
         data = await state.get_data()
         orm_correct_count = await orm_get_result(session, user_id)
         correct_count = data.get('result', orm_correct_count)
-        orm_all_results = await orm_get_all_results(session)
-        cnt = len(orm_all_results) if orm_all_results else 1
-        avg_result = sum(orm_all_results) / cnt
+
         new_message = await callback_query.message.edit_text(text=_('Factuality Test.\nТест по книге Ханса Рослинга «Фактологичность»\n\n'
-                                    'Вы уже прошли тест!\n\n'
-                                    'Ваш результат: {correct_count}/13\n'
-                                    'Ср.результат бота: {avg_result}/13\n'
-                                    'Ср.результат книги: 2.2/13').format(correct_count=correct_count, avg_result=avg_result),
+                                    'Вы прошли тест!\n\n'
+                                    'Ваш результат: {correct_count}/13\n').format(correct_count=correct_count),
                                     reply_markup=get_callback_btns(btns={'Правильные ответы':'correct_answers',
-                                                                        'Больше о книге':'book_info',
-                                                                        'Статистика теста':'test_stats'},
+                                                                        'О книге':'about_book',
+                                                                        'О тесте':'about_test'},
                                                                         sizes=(1,1,1))) # type: ignore
     else:
         new_message = await callback_query.message.edit_text(text=_('Factuality Test.\nТест по книге Ганса Рослинга «Фактологичность»\n\n'
-                                    'Вы остановились на {current_question} вопросе. \n'
+                                    'Вы остановились на {current_question} вопросе. \n\n'
                                     'Желаете продолжить тест?').format(current_question=current_question),
                                 reply_markup=inline_continue_test()) # type: ignore
 
@@ -194,23 +191,16 @@ async def donate_back_to_main(callback_query: CallbackQuery, state: FSMContext, 
     try:
         orm_correct_count = await orm_get_result(session, user_id)
         correct_count = data.get('result', orm_correct_count)
-        orm_all_results = await orm_get_all_results(session)
-        cnt_res = len(orm_all_results) if orm_all_results else 1
-        sum_res = sum(orm_all_results) if orm_all_results else 0
-        avg_result = sum_res / cnt_res
     except Exception as e:
         logger.error("Ошибка при получении результатов из базы: %s", e)
         correct_count = 0
-        avg_result = 0
 
     new_message = await callback_query.message.answer(text=_('Factuality Test.\nТест по книге Ханса Рослинга «Фактологичность»\n\n'
-                                'Вы уже прошли тест!\n\n'
-                                'Ваш результат: {correct_count}/13\n'
-                                'Ср.результат бота: {avg_result}/13\n'
-                                'Ср.результат книги: 2.2/13').format(correct_count=correct_count, avg_result=avg_result),
+                                'Вы прошли тест!\n\n'
+                                'Ваш результат: {correct_count}/13\n').format(correct_count=correct_count),
                                 reply_markup=get_callback_btns(btns={'Правильные ответы':'correct_answers',
-                                                                    'Больше о книге':'book_info',
-                                                                    'Статистика теста':'test_stats'},
+                                                                    'О книге':'about_book',
+                                                                    'О тесте':'about_test'},
                                                                     sizes=(1,1,1))) # type: ignore
     # Сохраняем новый message_id
     await state.update_data(last_message_id=new_message.message_id)
@@ -218,11 +208,12 @@ async def donate_back_to_main(callback_query: CallbackQuery, state: FSMContext, 
 
 # Обработчик нажатия на инлайн-кнопку "Начать тест", или "Продолжить тест"
 @factuality_router.callback_query(F.data.in_(["start_test", "continue_test"]))
-async def start_test_callback(callback_query: CallbackQuery, state: FSMContext, session: AsyncSession):
+async def start_test_callback(callback_query: CallbackQuery, state: FSMContext, session: AsyncSession, workflow_data: dict):
     user_id = callback_query.from_user.id
     data = await state.get_data()
     orm_current_question = await orm_get_current_question(session, user_id)
     current_question = data.get('current_question', orm_current_question)
+    analytics = workflow_data['analytics']
 
     question_text = questions_answers[current_question][0]
     question_answers = questions_answers[current_question][1]
@@ -233,26 +224,29 @@ async def start_test_callback(callback_query: CallbackQuery, state: FSMContext, 
 
     # Сохраняем временную метку
     timestamp = datetime.now().timestamp()
-    # ic(timestamp)
     await state.update_data(timestamp=timestamp)
 
     await state.set_state(TestStates.QUESTION_PROCESS)
     await callback_query.answer()
 
+    await analytics(user_id=user_id,
+                    category_name="/process",
+                    command_name="/start_test")
+
 # Обработчик для inline ответов на вопросы
 @factuality_router.callback_query(StateFilter(TestStates.QUESTION_PROCESS), F.data.startswith('question'))
-async def process_question(callback_query: CallbackQuery, state: FSMContext, session: AsyncSession):
+async def process_question(callback_query: CallbackQuery, state: FSMContext, session: AsyncSession, workflow_data: dict):
     # получаем id юзера, номер вопроса, ответ, сохраняем в FSM
     user_id = callback_query.from_user.id
     data = await state.get_data()
     orm_current_question = await orm_get_current_question(session, user_id)
     current_question = data.get('current_question', orm_current_question)
+    analytics = workflow_data['analytics']
 
     timestamp = data.get('timestamp', 0)
     cur_timestamp = datetime.now().timestamp()
     answer_time_data = round(cur_timestamp - timestamp, 2)
     await state.update_data(timestamp=cur_timestamp)
-    # ic(answer_time_data)
 
     # проверяем, если текущий вопрос меньше 13, то переходим к следующему вопросу
     if current_question < 13:
@@ -275,6 +269,10 @@ async def process_question(callback_query: CallbackQuery, state: FSMContext, ses
         # Сохраняем новый message_id
         await state.update_data(last_message_id=new_message.message_id)
         await callback_query.answer()
+
+        await analytics(user_id=user_id,
+                        category_name="/process",
+                        command_name="/process_test")
 
     # если текущий вопрос больше 13, то завершаем тест
     else:
@@ -301,7 +299,6 @@ async def process_question(callback_query: CallbackQuery, state: FSMContext, ses
         await state.update_data(result=correct_count)
         answer_total_time = await calc_answer_time(data_answers)
         data_answers['answer_total_time'] = answer_total_time
-        # ic(data_answers)
 
         # сохраняем данные в бд
         try:
@@ -312,22 +309,79 @@ async def process_question(callback_query: CallbackQuery, state: FSMContext, ses
             logger.error("Ошибка при сохранении данных в базу: %s", e)
             await callback_query.message.edit_text(text=_('Ошибка при сохранении данных в базу: %s', e))
 
-        # получаем все result юзеров
-        orm_all_results = await orm_get_all_results(session)
-        ic(orm_all_results)
-        cnt = len(orm_all_results) if orm_all_results else 1
-        avg_result = sum(orm_all_results) / cnt
-
         # отправляем юзеру сообщение о завершении теста
         text = _("Тест завершен!\n\n"
-                    "Ваш результат: {correct_count}/13\n\n"
-                    "Ср.результат бота: {avg_result}/13\n"
-                    "Ср.результат книги: 2.2/13").format(correct_count=correct_count, avg_result=avg_result)
+                    "Ваш результат: {correct_count}/13").format(correct_count=correct_count)
         new_message = await callback_query.message.edit_text(text=text,
                                             reply_markup=get_callback_btns(btns={'Правильные ответы':'correct_answers',
-                                                                                 'Больше о книге':'book_info',
-                                                                                 'Статистика теста':'test_stats'},
+                                                                                 'О книге':'about_book',
+                                                                                 'О тесте':'about_test'},
                                                                         sizes=(1,1,1))) # type: ignore
         # Сохраняем новый message_id
         await state.update_data(last_message_id=new_message.message_id)
         await callback_query.answer()
+
+        await analytics(user_id=user_id,
+                        category_name="/process",
+                        command_name="/finish_test")
+
+# Обработчик нажатия на инлайн-кнопку "О книге"
+@factuality_router.callback_query(F.data == 'about_book')
+async def about_book(callback_query: CallbackQuery, state: FSMContext, workflow_data: dict):
+    user_id = callback_query.from_user.id
+
+    text = ("📖 О книге «Фактологичность»\n\n"
+            "«Фактологичность» – это не просто набор фактов, а итог многолетних исследований Ханса Рослинга, "
+            "профессора международного здравоохранения. Автор проводил тесты среди студентов, политиков, ученых и даже нобелевских лауреатов по всему миру.\n\n"
+            "Примечательно, что большинство участников, независимо от образования или профессиональной подготовки, "
+            "справлялись хуже, чем если бы выбирали ответы случайным образом. Рослинг иллюстрирует это примером обезьяны, "
+            "которой предлагалось выбрать один из трех бананов: используя такой подход, она угадала бы 4 из 13 правильных ответов. "
+            "Это демонстрирует, что даже эксперты подвержены когнитивным искажениям и стереотипам.\n\n"
+            "Ханс Рослинг раскрывает основные инстинкты, заставляющие нас драматизировать мировую ситуацию, и предлагает советы для более рационального мышления.\n\n"
+            "Главная идея книги – научиться воспринимать мир через призму фактов, а не догадок.")
+
+    new_message = await callback_query.message.edit_text(text=_(text),
+                                                                                reply_markup=get_callback_btns(btns={'↩️ Назад': 'back_to_main'},
+                                                                                                                sizes=(1,1))) # type: ignore
+    await state.update_data(last_message_id=new_message.message_id)
+    await callback_query.answer()
+
+    analytics = workflow_data['analytics']
+    await analytics(user_id=user_id,
+                    category_name="/info",
+                    command_name="/about_book")
+
+
+# Обработчик нажатия на инлайн-кнопку "О тесте"
+@factuality_router.callback_query(F.data == 'about_test')
+async def about_test(callback_query: CallbackQuery, state: FSMContext, session: AsyncSession, workflow_data: dict):
+    user_id = callback_query.from_user.id
+
+    # получаем все result юзеров
+    orm_all_results = await orm_get_all_results(session)
+    cnt_res = len(orm_all_results) if orm_all_results else 1
+    sum_res = sum(orm_all_results) if orm_all_results else 0
+    avg_result = sum_res / cnt_res
+
+    text = ("📊 О тесте Factuality Test\n\n"
+            "Тест Factuality Test основан на данных, собранных Хансом Рослингом для книги «Фактологичность». "
+            "Это инструмент, который показывает, насколько наше восприятие мира искажено стереотипами и когнитивными ошибками.\n\n"
+            "Каждый вопрос в тесте выявляет распространённые заблуждения о глобальных тенденциях, таких как уровень бедности, доступ к образованию и здравоохранению. "
+            "Результаты участников демонстрируют, как важно основываться на фактах, а не на интуитивных предположениях.\n\n"
+            "В процессе создания теста вопросы проверялись на тысячах людей: от студентов и журналистов до политиков и международных экспертов. "
+            "Средний результат, полученный авторами книги, составил всего 2-3 правильных ответа из 13, тогда как случайное угадывание дало бы 4. "
+            "Это подтверждает влияние мифов и стереотипов на наше мировоззрение.\n\n"
+            "На текущий момент:\n"
+            "• Количество опрошенных пользователей Factuality Test - {cnt_res}\n"
+            "• Средний результат среди опрошенных Factuality Test - {avg_result:.1f}")
+
+    new_message = await callback_query.message.edit_text(text=_(text).format(cnt_res=cnt_res, avg_result=avg_result),
+                                                                                reply_markup=get_callback_btns(btns={'↩️ Назад': 'back_to_main'},
+                                                                                                                sizes=(1,1))) # type: ignore
+    await state.update_data(last_message_id=new_message.message_id)
+    await callback_query.answer()
+
+    analytics = workflow_data['analytics']
+    await analytics(user_id=user_id,
+                    category_name="/info",
+                    command_name="/about_test")

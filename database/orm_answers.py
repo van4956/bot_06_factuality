@@ -25,7 +25,7 @@ async def orm_get_answer(session: AsyncSession, user_id: int) -> Answers | None:
     return result.scalar()
 
 # получаем текущий вопрос юзера
-async def orm_get_current_question(session: AsyncSession, user_id: int) -> int:
+async def orm_get_current_question(session: AsyncSession, user_id: int) -> int | None:
     query = select(Answers.current_question).where(Answers.user_id == user_id)
     result = await session.execute(query)
     return result.scalar()
@@ -37,7 +37,7 @@ async def orm_update_current_question(session: AsyncSession, user_id: int, quest
     await session.commit()
 
 # получаем количество правильных ответов юзера
-async def orm_get_result(session: AsyncSession, user_id: int) -> int:
+async def orm_get_result(session: AsyncSession, user_id: int) -> int | None:
     query = select(Answers.result).where(Answers.user_id == user_id)
     result = await session.execute(query)
     return result.scalar()
@@ -47,4 +47,3 @@ async def orm_get_all_results(session: AsyncSession) -> list[int]:
     query = select(Answers.result)
     result = await session.execute(query)
     return result.scalars().all()
-

@@ -18,7 +18,7 @@ from aiogram.types import ChatMemberUpdated
 from aiogram.utils.i18n import gettext as _
 
 from database.orm_users import orm_add_user, orm_get_ids, orm_get_users, orm_update_status
-from database.orm_answers import orm_get_answer, orm_get_current_question, orm_update_current_question, orm_create_answer
+from database.orm_answers import orm_get_answer, orm_get_current_question, orm_update_current_question, orm_create_answer, orm_get_result
 from common import keyboard
 
 
@@ -48,8 +48,8 @@ async def start_cmd(message: Message, session: AsyncSession, bot: Bot, workflow_
         if user_id not in list_users:
             await bot.send_message(chat_id=chat_id, text=f"✅ @{user_name} - подписался на бота")
             new_message = await message.answer(text=_('{user_name}, добро пожаловать в Factuality Test!\n\n'
-                                        'Этот бот основан на книге Ханса Рослинга «Фактологичность». '
-                                        'Пройдите тест из 13 вопросов, чтобы узнать, насколько точно вы воспринимаете мировые тенденции.\n\n'
+                                        'Этот бот создан на основе книги Ханса Рослинга «Фактологичность». '
+                                        'Пройдите тест из 13 вопросов, чтобы проверить, насколько верно вы понимаете мировые тенденции.\n\n'
                                         'Готовы пройти тест?').format(user_name=user_name),
                                 reply_markup=keyboard.inline_start_test())
             # Добавляем записи нового юзера в таблицы
@@ -85,19 +85,22 @@ async def start_cmd(message: Message, session: AsyncSession, bot: Bot, workflow_
 
             # Отправляем новое сообщение с учетом текущего вопроса
             if current_question == 1:
-                new_message = await message.answer(text=_('Factuality Test.\nТест по книге Ганса Рослинга «Фактологичность»\n\n'
+                new_message = await message.answer(text=_('Factuality Test.\nТест по книге Ханса Рослинга «Фактологичность»\n\n'
                                             'Готовы пройти тест?'),
                                      reply_markup=keyboard.inline_start_test())
             elif current_question > 13:
-                new_message = await message.answer(text=_('Factuality Test.\nТест по книге Ганса Рослинга «Фактологичность»\n\n'
-                                            'Вы уже прошли тест!\n'
-                                            'Описываем какой то результат'),
+                data = await state.get_data()
+                orm_correct_count = await orm_get_result(session, user_id)
+                correct_count = data.get('result', orm_correct_count)
+                new_message = await message.answer(text=_('Factuality Test.\nТест по книге Ханса Рослинга «Фактологичность»\n\n'
+                                            'Вы прошли тест!\n\n'
+                                            'Ваш результат: {correct_count}/13\n').format(correct_count=correct_count),
                                      reply_markup=keyboard.get_callback_btns(btns={'Правильные ответы':'correct_answers',
-                                                                                 'Больше о книге':'book_info',
-                                                                                 'Статистика теста':'test_stats'},
+                                                                                 'О книге':'about_book',
+                                                                                 'О тесте':'about_test'},
                                                                             sizes=(1,1,1)))
             else:
-                new_message = await message.answer(text=_('Factuality Test.\nТест по книге Ганса Рослинга «Фактологичность»\n\n'
+                new_message = await message.answer(text=_('Factuality Test.\nТест по книге Ханса Рослинга «Фактологичность»\n\n'
                                             'Вы остановились на {current_question} вопросе. \n'
                                             'Желаете продолжить тест?').format(current_question=current_question),
                                      reply_markup=keyboard.inline_continue_test())
