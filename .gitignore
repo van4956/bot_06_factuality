@@ -19,6 +19,7 @@ Faktologichnost_Desyat_Pr.txt
 Rosling_U._Faktologichnost_Desyat_Pr.a4.pdf
 Rosling_U._Faktologichnost_Desyat_Pr.txt
 prescription.txt
+bot_06_factuality_contents.txt
 
 # Исключаем все файлы в папках баз данных, но оставляем сами папки
 /database/influxdb/*

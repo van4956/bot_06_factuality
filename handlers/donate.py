@@ -219,7 +219,7 @@ async def on_successfull_payment(message: Message, state: FSMContext, workflow_d
     data = await state.get_data()
     donate_info = data.get('donate_info', {})
     donate_info[t_id] = invoice_payload
-    print('donate_info: ', donate_info)
+    # print('donate_info: ', donate_info)
     await state.update_data(donate_info=donate_info)
 
     # Получаем сохраненный message_id из FSM
@@ -237,7 +237,7 @@ async def on_successfull_payment(message: Message, state: FSMContext, workflow_d
                "Ваш донат успешно принят.\n\n"
                 "ID транзакции:\n<code>{t_id}</code>").format(t_id=t_id),
         message_effect_id="5159385139981059251",
-        reply_markup=keyboard.get_callback_btns(btns={'↩️ Назад': 'back_to_main'}, sizes=(1,1))
+        reply_markup=keyboard.get_callback_btns(btns={_('↩️ Назад'): 'back_to_main'}, sizes=(1,1))
     )
         # другие реакции (если надо)
         # 🔥 огонь - 5104841245755180586

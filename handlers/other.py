@@ -80,41 +80,51 @@ async def update_locale_cmd(callback: CallbackQuery, session: AsyncSession, stat
     if callback.data == 'locale_en':
         await orm_update_locale(session, user_id, 'en')  # Обновляем локаль в бд
         await state.update_data(locale='en')  # Обновляем локаль в контексте
-        await callback.message.edit_text(text=("Settings language \n"
-                                               "Current language: English 🇬🇧 \n\n"
-                                               "Select the language in which the bot will work"),
-                                         reply_markup=keyboard_language())
+        # удаляем прошлое сообщение, и отправляем новое
+        await callback.message.delete()
+        new_message = await callback.message.answer(text=("Settings language \n"
+                                            "Current language: English 🇬🇧 \n\n"
+                                            "Select the language in which the bot will work"),
+                                      reply_markup=keyboard.get_callback_btns(btns={'🇬🇧 English':'locale_en',
+                                                                                    '🇷🇺 Russian':'locale_ru',
+                                                                                    '↩️ Back': 'back_to_main'},
+                                                                                    sizes=(2,1)))
         await callback.answer("Selected: English 🇺🇸 ")  # Отправляем всплывашку
 
-    elif callback.data == 'locale_ru':
+    # elif callback.data == 'locale_ru':
+    else:
         await orm_update_locale(session, user_id, 'ru')  # Обновляем локаль в бд
         await state.update_data(locale='ru')  # Обновляем локаль в контексте
-        await callback.message.edit_text(text=('Настройки языка \n'
-                                               'Текущий язык: Русский 🇷🇺\n\n'
-                                               'Выберите язык, на котором будет работать бот'),
-                                         reply_markup=keyboard_language())
+        await callback.message.delete()
+        new_message = await callback.message.answer(text=('Настройки языка \n'
+                                            'Текущий язык: Русский 🇷🇺\n\n'
+                                            'Выберите язык, на котором будет работать бот'),
+                                      reply_markup=keyboard.get_callback_btns(btns={'🇬🇧 Английский':'locale_en',
+                                                                                    '🇷🇺 Русский':'locale_ru',
+                                                                                    '↩️ Назад': 'back_to_main'},
+                                                                                    sizes=(2,1)))
         await callback.answer("Выбран: Русский язык 🇷🇺 ")  # Отправляем всплывашку
 
-    elif callback.data == 'locale_de':
-        await orm_update_locale(session, user_id, 'de')  # Обновляем локаль в бд
-        await state.update_data(locale='de')  # Обновляем локаль в контексте
-        await callback.message.edit_text(text=("Spracheinstellungen\n"
-                                               "Aktuelle Sprache: Deutsch 🇩🇪\n\n"
-                                               "Wählen Sie die Sprache aus, in der der Bot arbeiten soll"),
-                                         reply_markup=keyboard_language())
-        await callback.answer("Ausgewählt: Deutsch 🇩🇪")  # Отправляем всплывашку
+    # elif callback.data == 'locale_de':
+    #     await orm_update_locale(session, user_id, 'de')  # Обновляем локаль в бд
+    #     await state.update_data(locale='de')  # Обновляем локаль в контексте
+    #     await callback.message.edit_text(text=("Spracheinstellungen\n"
+    #                                            "Aktuelle Sprache: Deutsch 🇩🇪\n\n"
+    #                                            "Wählen Sie die Sprache aus, in der der Bot arbeiten soll"),
+    #                                      reply_markup=keyboard_language())
+    #     await callback.answer("Ausgewählt: Deutsch 🇩🇪")  # Отправляем всплывашку
 
-    elif callback.data == 'locale_fr':
-        await orm_update_locale(session, user_id, 'fr')  # Обновляем локаль в бд
-        await state.update_data(locale='fr')  # Обновляем локаль в контексте
-        await callback.message.edit_text(text=("Paramètres de langue\n"
-                                               "Langue actuelle : Français 🇫🇷\n\n"
-                                               "Sélectionnez la langue dans laquelle le bot fonctionnera"),
-                                         reply_markup=keyboard_language())
-        await callback.answer("Ausgewählt: Französisch 🇫🇷")  # Отправляем всплывашку
+    # elif callback.data == 'locale_fr':
+    #     await orm_update_locale(session, user_id, 'fr')  # Обновляем локаль в бд
+    #     await state.update_data(locale='fr')  # Обновляем локаль в контексте
+    #     await callback.message.edit_text(text=("Paramètres de langue\n"
+    #                                            "Langue actuelle : Français 🇫🇷\n\n"
+    #                                            "Sélectionnez la langue dans laquelle le bot fonctionnera"),
+    #                                      reply_markup=keyboard_language())
+    #     await callback.answer("Ausgewählt: Französisch 🇫🇷")  # Отправляем всплывашку
 
     # Сохраняем message_id текущего сообщения
-    await state.update_data(last_message_id=callback.message.message_id)
+    await state.update_data(last_message_id=new_message.message_id)
 
     analytics = workflow_data['analytics']
     await analytics(user_id=user_id,
@@ -131,10 +141,10 @@ async def information_cmd(message: Message, workflow_data: dict, state: FSMConte
     current_question = data.get('current_question', 0)
 
     if current_question <= 13:
-        reply_markup = keyboard.get_callback_btns(btns={'↩️ Назад': 'back_to_main'}, sizes=(1,1))
+        reply_markup = keyboard.get_callback_btns(btns={_('↩️ Назад'): 'back_to_main'}, sizes=(1,1))
     else:
-        reply_markup = keyboard.get_callback_btns(btns={'Поддержать проект':'donate',
-                                                                                        '↩️ Назад': 'back_to_main'},
+        reply_markup = keyboard.get_callback_btns(btns={_('Поддержать проект'):'donate',
+                                                                                        _('↩️ Назад'): 'back_to_main'},
                                                                                     sizes=(1,1))
 
     # Удаляем команду пользователя
@@ -206,7 +216,7 @@ async def terms_cmd(message: Message, workflow_data: dict, state: FSMContext):
                                 '❌ Отказ от использования:\n'
                                 '• Чтобы остановить бота, заблокируйте его стандартными средствами Telegram\n'
                                 '• При этом ваши данные будут удалены из статистики ответов\n\n'),
-                                reply_markup=keyboard.get_callback_btns(btns={'↩️ Назад': 'back_to_main'},
+                                reply_markup=keyboard.get_callback_btns(btns={_('↩️ Назад'): 'back_to_main'},
                                                 sizes=(1,1)))
 
     # Сохраняем message_id текущего сообщения

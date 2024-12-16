@@ -95,9 +95,9 @@ async def start_cmd(message: Message, session: AsyncSession, bot: Bot, workflow_
                 new_message = await message.answer(text=_('Factuality Test.\nТест по книге Ханса Рослинга «Фактологичность»\n\n'
                                             'Вы прошли тест!\n\n'
                                             'Ваш результат: {correct_count}/13\n').format(correct_count=correct_count),
-                                     reply_markup=keyboard.get_callback_btns(btns={'Правильные ответы':'correct_answers',
-                                                                                 'О книге':'about_book',
-                                                                                 'О тесте':'about_test'},
+                                     reply_markup=keyboard.get_callback_btns(btns={_('Правильные ответы'):'correct_answers',
+                                                                                 _('О книге'):'about_book',
+                                                                                 _('О тесте'):'about_test'},
                                                                             sizes=(1,1,1)))
             else:
                 new_message = await message.answer(text=_('Factuality Test.\nТест по книге Ханса Рослинга «Фактологичность»\n\n'

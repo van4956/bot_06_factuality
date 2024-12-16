@@ -66,11 +66,11 @@ def get_callback_btns(*, # запрет на передачу неименова
 
 # Функция кнопки "Пройти тест"
 def inline_start_test():
-    return get_callback_btns(btns={'Пройти тест':'start_test'},
+    return get_callback_btns(btns={_('Пройти тест'):'start_test'},
                              sizes=(1,))
 
 
 # Функция кнопки "Продолжить тест"
 def inline_continue_test():
-    return get_callback_btns(btns={'Продолжить тест':'continue_test'},
+    return get_callback_btns(btns={_('Продолжить тест'):'continue_test'},
                              sizes=(1,))
