@@ -342,7 +342,7 @@ async def process_question(callback_query: CallbackQuery, state: FSMContext, ses
     # проверяем, если текущий вопрос меньше 13, то переходим к следующему вопросу
     if current_question < 13:
         answer_int = 'answer_' + str(current_question)
-        answer_data = callback_query.data.split('_')[-1]
+        answer_data = int(callback_query.data.split('_')[-1])
         answer_int_time = 'answer_' + str(current_question) + '_time'
         answer_dict = {answer_int: answer_data, answer_int_time: answer_time_data}
         await state.update_data(answer_dict)
@@ -370,7 +370,7 @@ async def process_question(callback_query: CallbackQuery, state: FSMContext, ses
     # если текущий вопрос больше 13, то завершаем тест
     else:
         answer_int = 'answer_' + str(current_question)
-        answer_data = callback_query.data.split('_')[-1]
+        answer_data = int(callback_query.data.split('_')[-1])
         answer_int_time = 'answer_' + str(current_question) + '_time'
         answer_dict = {answer_int: answer_data, answer_int_time: answer_time_data}
         await state.update_data(answer_dict)
@@ -453,7 +453,7 @@ async def about_test(callback_query: CallbackQuery, state: FSMContext, session: 
     user_id = callback_query.from_user.id
 
     # получаем все result юзеров
-    orm_all_results = await orm_get_all_results(session)
+    orm_all_results = [i for i in await orm_get_all_results(session) if i is not None]
     cnt_res = len(orm_all_results) if orm_all_results else 1
     sum_res = sum(orm_all_results) if orm_all_results else 0
     avg_result = sum_res / cnt_res

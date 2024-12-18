@@ -19,8 +19,6 @@ class TgBot:
     admin_list: list[int]
     home_group: list[int]
     work_group: list[int]
-    api_gpt: str
-    paymaster_token: str
 
 @dataclass
 class DataBase:
@@ -86,8 +84,6 @@ def load_config(path: str | None = None) -> Config:
             admin_list=list(admin_list),
             home_group=list(home_group),
             work_group=list(work_group),
-            api_gpt=env('API_GPT'),
-            paymaster_token=env('PAYMASTER_TOKEN')
             ),
         db=DataBase(
             db_post=env('DB_POST'),

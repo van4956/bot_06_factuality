@@ -520,7 +520,7 @@ msgstr "In countries with a low level of income"
 
 #: handlers/correct_answer.py:245
 msgid "В странах со средним уровнем доходов"
-msgstr "In countries with a medium level of income"
+msgstr "In countries with a medium income"
 
 #: handlers/correct_answer.py:246
 msgid "В странах с высоким уровнем доходов"
@@ -642,6 +642,12 @@ msgstr "...remain unchanged"
 msgid "...понизится"
 msgstr "...decrease"
 
+#: handlers/correct_answer.py:315
+msgid "Вы прошли тест!\n\nДавайте рассмотрим каждый вопрос, "
+"правильные ответы и разберём, почему именно они являются верными."
+msgstr "You passed the test!\n\nLet's look at each question, "
+"correct answers and explain why they are correct."
+
 #: handlers/correct_answer.py:318
 msgid "Дальше"
 msgstr "Next"
@@ -679,6 +685,155 @@ msgstr ""
 "\n"
 "Transaction ID:\n"
 "<code>{t_id}</code>"
+
+#: handlers/factuality.py:37
+msgid ""
+"Вопрос 1:\n"
+"\n"
+"Сколько девочек сегодня оканчивают начальную школу в странах с низким "
+"уровнем доходов?"
+msgstr ""
+"Question 1:\n"
+"\n"
+"How many girls today finish primary school in countries with a low level of "
+"income?"
+
+#: handlers/factuality.py:38
+msgid ""
+"Вопрос 2:\n"
+"\n"
+"Где живет большая часть населения мира?"
+msgstr ""
+"Question 2:\n"
+"\n"
+"Where does the majority of the world's population live?"
+
+#: handlers/factuality.py:39
+msgid ""
+"Вопрос 3:\n"
+"\n"
+"За последние 20 лет доля мирового населения, живущего в нищете..."
+msgstr ""
+"Question 3:\n"
+"\n"
+"In the last 20 years, the proportion of the world's population living in poverty..."
+
+#: handlers/factuality.py:40
+msgid ""
+"Вопрос 4:\n"
+"\n"
+"Какова сегодня ожидаемая продолжительность жизни в мире?"
+msgstr ""
+"Question 4:\n"
+"\n"
+"What is the expected life expectancy in the world today?"
+
+#: handlers/factuality.py:41
+msgid ""
+"Вопрос 5:\n"
+"\n"
+"Сегодня в мире насчитывается 2 миллиарда детей в возрасте от 0 до 15 лет."
+" Сколько детей, согласно прогнозу ООН, будет в мире в 2100 году?"
+msgstr ""
+"Question 5:\n"
+"\n"
+"Today, there are 2 billion children aged 0 to 15 years old in the world. How many children, according to the UN forecast, will be in the world in 2100?"
+
+#: handlers/factuality.py:42
+msgid ""
+"Вопрос 6:\n"
+"\n"
+"По прогнозам ООН, к 2100 году население земного шара увеличится на 4 "
+"миллиарда человек. За счет чего это произойдет?"
+msgstr ""
+"Question 6:\n"
+"\n"
+"According to UN forecasts, the population of the Earth will increase by 4 billion people by 2100. What is the cause of this?"
+
+#: handlers/factuality.py:43
+msgid ""
+"Вопрос 7:\n"
+"\n"
+"Как за последние 100 лет изменилось количество смертей в год, вызванных "
+"стихийными бедствиями?"
+msgstr ""
+"Question 7:\n"
+"\n"
+"How has the number of deaths per year caused by natural disasters changed over the last 100 years?"
+
+#: handlers/factuality.py:44
+msgid ""
+"Вопрос 8:\n"
+"\n"
+"Сегодня население земного шара составляет около 7 миллиардов человек. "
+"Какая карта лучше всего показывает их распределение?\n"
+"\n"
+"<i>(Карта которая в описании бота ⬆️.\n"
+"Каждая фигурка обозначает 1 миллиард человек)</i>"
+msgstr ""
+"Question 8:\n"
+"\n"
+"The world's population is about 7 billion people. Which map best shows their distribution?\n"
+"\n"
+"<i>(The map that is in the bot's description ⬆️.\n"
+"Each figure represents 1 billion people)</i>"
+
+#: handlers/factuality.py:45
+msgid ""
+"Вопрос 9:\n"
+"\n"
+"Сколько годовалых детей в мире прививается сегодня от каких-либо болезней?"
+msgstr ""
+"Question 9:\n"
+"\n"
+"How many children in the world are vaccinated today against any diseases?"
+
+#: handlers/factuality.py:46
+msgid ""
+"Вопрос 10:\n"
+"\n"
+"В среднем по миру к 30 годам мужчины тратят на учебу 10 лет своей жизни. "
+"Сколько лет тратят на учебу к тому же возрасту женщины?"
+msgstr ""
+"Question 10:\n"
+"\n"
+"On average, around the world, men spend 10 years of their life on education by the age of 30. How many years do women spend on education at the same age?"
+
+#: handlers/factuality.py:47
+msgid ""
+"Вопрос 11:\n"
+"\n"
+"В 1996 году тигры, гигантские панды и черные носороги вошли в список "
+"вымирающих видов. Сколько из этих трех видов сегодня находятся под "
+"угрозой исчезновения?"
+msgstr ""
+"Question 11:\n"
+"\n"
+"In 1996, tigers, giant pandas, and black rhinos were added to the list of "
+"extinct species. How many of these three species are now threatened with "
+"extinction?"
+
+#: handlers/factuality.py:48
+msgid ""
+"Вопрос 12:\n"
+"\n"
+"Сколько человек в мире имеют доступ к электричеству?"
+msgstr ""
+"Question 12:\n"
+"\n"
+"How many people in the world have access to electricity?"
+
+#: handlers/factuality.py:49
+msgid ""
+"Вопрос 13:\n"
+"\n"
+"Эксперты по глобальному климату считают, что в течение следующих 100 лет "
+"средняя температура..."
+msgstr ""
+"Question 13:\n"
+"\n"
+"Global climate experts believe that over the next 100 years, "
+"average temperatures..."
 
 #: handlers/factuality.py:52 handlers/factuality.py:84
 #: handlers/factuality.py:96

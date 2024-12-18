@@ -1,7 +1,7 @@
 # Режим запуска:
 # docker == 1 - это запуск в docker - docker-compose up -d
 # docker == 0 - это запуск локально - ctrl + B
-docker = 0
+docker = 1
 
 import logging
 
@@ -26,9 +26,9 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.utils.i18n import ConstI18nMiddleware, I18n, SimpleI18nMiddleware, FSMI18nMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from influxdb_client.client.write.point import Point
-from influxdb_client.client.influxdb_client import InfluxDBClient
+from influxdb_client import InfluxDBClient, Point # type: ignore
 from influxdb_client.client.write_api import SYNCHRONOUS
+from influxdb_client.rest import ApiException
 
 from config_data.config import Config, load_config
 
@@ -47,7 +47,9 @@ async def analytics(user_id: int, command_name: str, category_name: str):
     if docker == 1:
         try:
             # Настройка клиента для подключения к InfluxDB
-            client = InfluxDBClient(url=config.influx.url, token=config.influx.token, org=config.influx.org)
+            client = InfluxDBClient(url=config.influx.url,
+                                    token=config.influx.token,
+                                    org=config.influx.org)
             write_api = client.write_api(write_options=SYNCHRONOUS)
             current_time = datetime.now(timezone.utc)
 
@@ -63,9 +65,11 @@ async def analytics(user_id: int, command_name: str, category_name: str):
                     )
 
             # Записываем point в InfluxDB
-            write_api.write(bucket=config.influx.bucket, org=config.influx.org, record=point)
+            write_api.write(bucket=config.influx.bucket,
+                            org=config.influx.org,
+                            record=point)
 
-        except Exception as e:
+        except (ConnectionError, TimeoutError, ApiException) as e:
             logging.error("InfluxDB write error: %s", str(e))
         finally:
             client.close()
@@ -156,7 +160,7 @@ async def main() -> None:
 
     # Удаление предыдущей версии базы, и создание новых таблиц заново
     async with engine.begin() as connection:
-        await connection.run_sync(Base.metadata.drop_all)
+        # await connection.run_sync(Base.metadata.drop_all)
         await connection.run_sync(Base.metadata.create_all)
 
     # Регистрируем функцию, которая будет вызвана автоматически при запуске/остановке бота

@@ -228,6 +228,13 @@ async def terms_cmd(message: Message, workflow_data: dict, state: FSMContext):
                     category_name="/info",
                     command_name="/terms")
 
+# хендлер очистки фсм
+@other_router.message(F.text == 'fsm')
+async def fsm_cmd(message: Message, state: FSMContext):
+    await message.delete()
+    await state.clear()
+    logger.info("FSM cleared")
+
 # хендлер на получение сообщения от пользователя, и удаление его
 @other_router.message()
 async def echo(message: Message):

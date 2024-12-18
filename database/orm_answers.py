@@ -46,4 +46,4 @@ async def orm_get_result(session: AsyncSession, user_id: int) -> int | None:
 async def orm_get_all_results(session: AsyncSession) -> list[int]:
     query = select(Answers.result)
     result = await session.execute(query)
-    return result.scalars().all()
+    return list(result.scalars().all())
