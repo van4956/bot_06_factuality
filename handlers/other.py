@@ -16,11 +16,11 @@ from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMar
 from aiogram.utils.i18n import gettext as _
 
 from database.orm_users import orm_update_locale
+from database.orm_answers import orm_get_current_question
 from common import keyboard
 
 # Инициализируем роутер уровня модуля
 other_router = Router()
-
 
 
 # Клавиатура выбора языка
@@ -134,11 +134,11 @@ async def update_locale_cmd(callback: CallbackQuery, session: AsyncSession, stat
 
 # хендлер на команду /information
 @other_router.message(Command('information'))
-async def information_cmd(message: Message, workflow_data: dict, state: FSMContext):
+async def information_cmd(message: Message, session: AsyncSession, workflow_data: dict, state: FSMContext):
     # Получаем сохраненный message_id из FSM
     data = await state.get_data()
     last_message_id = data.get('last_message_id')
-    current_question = data.get('current_question', 0)
+    current_question = data.get('current_question', await orm_get_current_question(session, message.from_user.id))
 
     if current_question <= 13:
         reply_markup = keyboard.get_callback_btns(btns={_('↩️ Назад'): 'back_to_main'}, sizes=(1,1))
