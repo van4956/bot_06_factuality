@@ -79,7 +79,7 @@ async def analytics(user_id: int, command_name: str, category_name: str):
 
 # Инициализируем объект хранилища
 if docker == 1:
-    storage = RedisStorage(redis=Redis(host=config.redis.host, port=config.redis.port))  # данные хранятся на отдельном сервере Redis
+    storage = RedisStorage(redis=Redis(host=config.redis.host, port=config.redis.port, db=config.redis.db))  # данные хранятся на отдельном сервере Redis
 else:
     storage = MemoryStorage()  # данные хранятся в оперативной памяти, при перезапуске всё стирается (для тестов и разработки)
 

@@ -33,6 +33,7 @@ class Redis:
     """
     Класс для хранения информации о Redis
     """
+    db: int
     host: str
     port: int
 
@@ -91,7 +92,8 @@ def load_config(path: str | None = None) -> Config:
             ),
         redis=Redis(
             host=env('REDIS_HOST'),
-            port=env('REDIS_PORT')
+            port=env('REDIS_PORT'),
+            db=env('REDIS_DB')
             ),
         influx=InfluxDB(
             admin=env('INFLUXDB_ADMIN_USER'),
