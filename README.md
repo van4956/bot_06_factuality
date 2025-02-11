@@ -3,12 +3,12 @@
 Factuality Test Bot is an interactive Telegram bot based on the book "Factfulness" by Hans Rosling, a professor of international health and renowned TED speaker.
 
 
-## What the bot does:
+## 🎯 What the bot does:
 - Conducts a test of 13 questions about global trends
 - Helps identify common misconceptions about the modern world
 
 
-## Why is this important?
+## 🤔 Why is this important?
 Understanding the real state of the world helps make more informed decisions and avoid common cognitive biases.
 
 
