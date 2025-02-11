@@ -13,9 +13,9 @@ Understanding the real state of the world helps make more informed decisions and
 
 
 ## Main commands:
-- **/information**: Learn more about the bot.
-- **/language**: Choose bot language.
-- **/terms**: Read terms of use.
+- **/information** - Learn more about the bot.
+- **/language** - Choose bot language.
+- **/terms** - Read terms of use.
 
 
 ## Technologies:
