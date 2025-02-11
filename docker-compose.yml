@@ -105,10 +105,11 @@ services:
       - "3001:3000"
     user: "472:472" # Используем UID и GID для grafana
     volumes:
-      - ./database/grafana:/var/lib/grafana:rw # Сохраняем данные Grafana на локальном диске
+      - grafana_data:/var/lib/grafana:rw
     networks:
       - botnet_2
     restart: unless-stopped
+    command: bash -c "chown -R 472:472 /var/lib/grafana && /run.sh"
 
 networks:
   botnet_2:
@@ -118,3 +119,5 @@ networks:
 volumes:
   redis_data_2:
     driver: local # Используем локальный драйвер для хранения данных Redis
+  grafana_data:
+    driver: local

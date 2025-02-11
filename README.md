@@ -1,23 +1,29 @@
 # Factuality Test Bot
 
-Factuality Test Bot - это интерактивный Telegram-бот, основанный на книге "Фактологичность" Ханса Рослинга. Бот помогает пользователям проверить свои знания о глобальных тенденциях и выявить когнитивные искажения в восприятии мира.
+Factuality Test Bot is an interactive Telegram bot based on the book "Factfulness" by Hans Rosling, a professor of international health and renowned TED speaker.
 
 
+## What the bot does:
+• Conducts a test of 13 questions about global trends
+• Helps identify common misconceptions about the modern world
 
-## Основные команды:
 
-- **/information**: Узнать больше о боте.
-- **/language**: Выбрать язык бота.
-- **/terms**: Прочитать условия использования.
+## Why is this important?
+Understanding the real state of the world helps make more informed decisions and avoid common cognitive biases.
 
-## Технологии:
 
+## Main commands:
+- **/information**: Learn more about the bot.
+- **/language**: Choose bot language.
+- **/terms**: Read terms of use.
+
+
+## Technologies:
 - 🐍 Python + Aiogram 3.x
 - 📊 PostgreSQL + SQLAlchemy
-- 🔄 Redis для управления состояниями
-- 📈 InfluxDB + Grafana для аналитики
+- 🔄 Redis for state management
+- 📈 InfluxDB + Grafana for analytics
 
 
-## Контакты
-
-Если у вас есть вопросы или предложения, пожалуйста, свяжитесь с нами через [Telegram](https://t.me/van4956).
+## Contact
+If you have any questions or suggestions, please contact us via [Telegram](https://t.me/van4956).
