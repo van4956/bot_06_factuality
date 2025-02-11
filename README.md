@@ -4,8 +4,8 @@ Factuality Test Bot is an interactive Telegram bot based on the book "Factfulnes
 
 
 ## What the bot does:
-• Conducts a test of 13 questions about global trends
-• Helps identify common misconceptions about the modern world
+- Conducts a test of 13 questions about global trends
+- Helps identify common misconceptions about the modern world
 
 
 ## Why is this important?
