@@ -23,7 +23,7 @@
 
 ## Notes
 
-**“Factfulness”** is a book summarizing years of research by Hans Rosling, a professor of international health.  
+"Factfulness" is a book summarizing years of research by Hans Rosling, a professor of international health.  
 The author conducted fact-based tests among students, politicians, scientists, and even Nobel Prize laureates around the world.
 
 Most participants - regardless of education or professional background - scored worse than if they had chosen answers at random.  
