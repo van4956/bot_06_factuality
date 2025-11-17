@@ -23,18 +23,8 @@ def get_keyboard(
     sizes: tuple = (2,),
 ):
     '''
-    Параметры request_contact и request_location должны быть индексами аргументов btns для нужных вам кнопок.
-    Пример:
-    get_keyboard(
-            "Меню",
-            "О магазине",
-            "Варианты оплаты",
-            "Варианты доставки",
-            "Отправить номер телефона"
-            placeholder="Что вас интересует?",
-            request_contact=4,
-            sizes=(2, 2, 1)
-        )
+    Параметры request_contact и request_location должны быть индексами аргументов btns для нужных нам кнопок.
+
     '''
     keyboard = ReplyKeyboardBuilder()
 

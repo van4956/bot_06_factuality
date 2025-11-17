@@ -15,6 +15,7 @@ class TgBot:
     Класс для хранения информации о телеграм-боте.
     """
     token: str
+    token_test: str
     owner: list[int]
     admin_list: list[int]
     home_group: list[int]
@@ -81,6 +82,7 @@ def load_config(path: str | None = None) -> Config:
     return Config(
         tg_bot=TgBot(
             token=env('BOT_TOKEN'),
+            token_test=env('BOT_TOKEN_TEST'),
             owner=list(owner),
             admin_list=list(admin_list),
             home_group=list(home_group),

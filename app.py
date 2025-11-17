@@ -1,7 +1,7 @@
 # Режим запуска:
 # docker == 1 - это запуск в docker - docker-compose up -d
 # docker == 0 - это запуск локально - ctrl + B
-docker = 1
+docker = 0
 
 import logging
 
@@ -79,12 +79,21 @@ async def analytics(user_id: int, command_name: str, category_name: str):
 
 # Инициализируем объект хранилища
 if docker == 1:
-    storage = RedisStorage(redis=Redis(host=config.redis.host, port=config.redis.port, db=config.redis.db))  # данные хранятся на отдельном сервере Redis
+    # данные хранятся на отдельном сервере Redis
+    storage = RedisStorage(redis=Redis(host=config.redis.host, port=config.redis.port, db=config.redis.db))
 else:
-    storage = MemoryStorage()  # данные хранятся в оперативной памяти, при перезапуске всё стирается (для тестов и разработки)
+    # данные хранятся в оперативной памяти (для тестов и разработки)
+    storage = MemoryStorage()
+
+# Формируем токен бота в зависимости от режима работы
+if docker == 1:
+    token = config.tg_bot.token
+else:
+    token = config.tg_bot.token_test
+
 
 logger.info('Инициализируем бот и диспетчер')
-bot = Bot(token=config.tg_bot.token,
+bot = Bot(token=token,
           default=DefaultBotProperties(parse_mode=ParseMode.HTML,
                                        link_preview=None,
                                        link_preview_is_disabled=None,
@@ -101,14 +110,19 @@ dp = Dispatcher(fsm_strategy=FSMStrategy.USER_IN_CHAT, storage=storage)
 # USER_IN_CHAT  -  для каждого юзера, в каждом чате ведется своя запись состояний (по дефолту)
 # GLOBAL_USER  -  для каждого юзера везде ведется своё состояние
 
+
 # Создаем движок бд
 if docker == 1:
-    engine = create_async_engine(config.db.db_post, echo=False)  # PostgreSQL
+    # PostgreSQL
+    engine = create_async_engine(config.db.db_post, echo=False)
 else:
-    engine = create_async_engine(config.db.db_lite, echo=False)  # SQLite (для тестов и разработки)
+    # SQLite (для тестов и разработки)
+    engine = create_async_engine(config.db.db_lite, echo=False)
+
 
 # Создаем ассинхроную сессию
 session_maker = async_sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
+
 
 # Помещаем нужные объекты в workflow_data диспетчера
 some_var_1 = 1
@@ -116,6 +130,7 @@ some_var_2 = 'Some text'
 dp.workflow_data.update({'my_int_var': some_var_1,
                          'my_text_var': some_var_2,
                          'analytics': analytics})
+
 
 # Подключаем мидлвари
 dp.update.outer_middleware(throttle.ThrottleMiddleware())  # тротлинг чрезмерно частых действий пользователей
