@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # API ключ OpenAI из .env
-API_GPT = os.getenv('API_GPT') 
+API_GPT = os.getenv('API_GPT')
 
 
 def translate_with_openai(russian_text: str) -> str:

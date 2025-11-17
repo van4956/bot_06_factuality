@@ -1,7 +1,7 @@
 # Режим запуска:
 # docker == 1 - это запуск в docker - docker-compose up -d
 # docker == 0 - это запуск локально - ctrl + B
-docker = 0
+docker = 1
 
 import logging
 
