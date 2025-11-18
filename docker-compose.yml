@@ -19,6 +19,7 @@ services:
           memory: 128M
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
+      - BOT_TOKEN_TEST=${BOT_TOKEN_TEST:-}
       - OWNER=${OWNER}
       - ADMIN_LIST=${ADMIN_LIST}
       - HOME_GROUP=${HOME_GROUP}

@@ -89,7 +89,7 @@ else:
 if docker == 1:
     token = config.tg_bot.token
 else:
-    token = config.tg_bot.token_test
+    token = config.tg_bot.token_test or config.tg_bot.token
 
 
 logger.info('Инициализируем бот и диспетчер')
